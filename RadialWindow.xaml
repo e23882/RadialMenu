@@ -9,18 +9,67 @@
         Topmost="True"
         ShowInTaskbar="False"
         ResizeMode="NoResize">
-    <Grid x:Name="RootLayout" MouseLeave="RootLayout_MouseLeave">
-        <!-- Semi-transparent circular background -->
-        <Ellipse Width="200" Height="200" Fill="#AA000000"/>
 
-        <!-- Container for buttons to ensure they are centered and scale -->
-        <Viewbox Width="120" Height="120">
-            <Grid Width="100" Height="100">
-                <Button Content="Btn 1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                <Button Content="Btn 2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button Content="Btn 3" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                <Button Content="Btn 4" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
-            </Grid>
-        </Viewbox>
+    <Grid x:Name="RootLayout" MouseLeave="RootLayout_MouseLeave" Width="200" Height="200">
+        <Grid.Resources>
+            <!-- Style for the pie-slice buttons -->
+            <Style x:Key="PieSliceButton" TargetType="Button">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <!-- The Path defines the pie slice shape (top-right quadrant) -->
+                                <Path x:Name="ButtonPath"
+                                      Data="M 100,100 L 100,0 A 100,100 0 0 1 200,100 Z"
+                                      Fill="#AA222222"
+                                      Stroke="#FF555555"
+                                      StrokeThickness="1"/>
+                                <!-- The ContentPresenter displays the button's content (e.g., text) -->
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,35,35"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="ButtonPath" Property="Fill" Value="#AA555555"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="ButtonPath" Property="Fill" Value="#AA000000"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+
+        <!-- The four buttons are layered. Each is rotated into its final position. -->
+        <!-- RenderTransformOrigin="0.5,0.5" ensures rotation happens around the center of the Grid. -->
+
+        <!-- Top Button -->
+        <Button Style="{StaticResource PieSliceButton}" Content="Top" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <RotateTransform Angle="-90"/>
+            </Button.RenderTransform>
+        </Button>
+
+        <!-- Right Button -->
+        <Button Style="{StaticResource PieSliceButton}" Content="Right" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <RotateTransform Angle="0"/>
+            </Button.RenderTransform>
+        </Button>
+
+        <!-- Bottom Button -->
+        <Button Style="{StaticResource PieSliceButton}" Content="Bottom" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <RotateTransform Angle="90"/>
+            </Button.RenderTransform>
+        </Button>
+
+        <!-- Left Button -->
+        <Button Style="{StaticResource PieSliceButton}" Content="Left" RenderTransformOrigin="0.5,0.5">
+            <Button.RenderTransform>
+                <RotateTransform Angle="180"/>
+            </Button.RenderTransform>
+        </Button>
     </Grid>
 </Window>
