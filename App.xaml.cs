@@ -1,4 +1,5 @@
 using Autofac;
+using RadialMenu.ViewModel;
 using System.Windows;
 
 namespace RadialMenu
@@ -8,7 +9,6 @@ namespace RadialMenu
         #region Fields
         private NotifyIcon _notifyIcon;
         private RadialWindow _radialWindow;
-        private SettingsWindow _settingsWindow;
         #endregion
 
         #region Properties
@@ -27,6 +27,8 @@ namespace RadialMenu
             
             builder.RegisterType<RadialWindowViewModel>()
                 .SingleInstance();
+            builder.RegisterType<SettingsWindowViewModel>()
+                .SingleInstance();
 
             Container = builder.Build();
         }
@@ -38,7 +40,6 @@ namespace RadialMenu
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             _radialWindow = new RadialWindow();
-            _settingsWindow = new SettingsWindow();
 
             _notifyIcon = new NotifyIcon();
             _notifyIcon.Icon = SystemIcons.Application;
@@ -60,6 +61,7 @@ namespace RadialMenu
 
         private void OnSettingsClicked(object sender, EventArgs e)
         {
+            var _settingsWindow = new SettingsWindow();
             _settingsWindow.Show();
             _settingsWindow.Activate();
         }
