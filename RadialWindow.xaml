@@ -1,0 +1,26 @@
+<Window x:Class="RadialMenu.RadialWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RadialWindow"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        SizeToContent="WidthAndHeight"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize">
+    <Grid x:Name="RootLayout" MouseLeave="RootLayout_MouseLeave">
+        <!-- Semi-transparent circular background -->
+        <Ellipse Width="200" Height="200" Fill="#AA000000"/>
+
+        <!-- Container for buttons to ensure they are centered and scale -->
+        <Viewbox Width="120" Height="120">
+            <Grid Width="100" Height="100">
+                <Button Content="Btn 1" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <Button Content="Btn 2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <Button Content="Btn 3" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <Button Content="Btn 4" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+            </Grid>
+        </Viewbox>
+    </Grid>
+</Window>
