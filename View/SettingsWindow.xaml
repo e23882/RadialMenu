@@ -44,6 +44,8 @@
             Margin="3"
             Padding="5"
             Background="Transparent"
+            Command="{Binding SaveSettingCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
             Content="SAVE" />
         <Button
             Grid.Row="4"
@@ -51,6 +53,9 @@
             Margin="3"
             Padding="5"
             Background="Transparent"
+            Command="{Binding CancelCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
             Content="CANCEL" />
     </Grid>
 </Window>
+
