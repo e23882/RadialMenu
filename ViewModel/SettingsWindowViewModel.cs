@@ -27,6 +27,13 @@ namespace RadialMenu.ViewModel
         }
         public bool MouseMenuEnable { get; set; }
         public string SelectedKey { get; set; }
+        public string Button1Text { get; set; }
+        public string Button2Text { get; set; }
+        public string Button3Text { get; set; }
+        public string Button4Text { get; set; }
+        public double PanelOpacity { get; set; }
+        public string PanelColor { get; set; }
+        public ObservableCollection<string> ColorOptions { get; set; }
         public RelayCommand MouseMenuKeyDownCommand { get; set; }
 
         /// <summary>
@@ -47,7 +54,17 @@ namespace RadialMenu.ViewModel
         public ICommand SaveSettingCommand { get; set; }
         private void SaveSettingCommandAction(object? obj)
         {
-            var settings = new { MouseMenuEnable, SelectedKey };
+            var settings = new 
+            {
+                MouseMenuEnable,
+                SelectedKey,
+                Button1Text,
+                Button2Text,
+                Button3Text,
+                Button4Text,
+                PanelOpacity,
+                PanelColor
+            };
             string jsonString = JsonSerializer.Serialize(settings);
             File.WriteAllText("settings.json", jsonString);
 
@@ -56,6 +73,7 @@ namespace RadialMenu.ViewModel
                 window.Close();
             }
         }
+
 
         /// <summary>
         /// 
@@ -83,8 +101,14 @@ namespace RadialMenu.ViewModel
         {
             InitialCommand();
             InitialSelection();
+            Button1Text = "Button 1";
+            Button2Text = "Button 2";
+            Button3Text = "Button 3";
+            Button4Text = "Button 4";
+            PanelOpacity = 0.8;
+            PanelColor = "Gray";
+            ColorOptions = new ObservableCollection<string> { "Gray", "Black", "White", "Red", "Green", "Blue" };
             LoadSettings();
-            SelectedKey = string.Empty;
         }
 
         private void LoadSettings()
@@ -100,6 +124,30 @@ namespace RadialMenu.ViewModel
                 if (settings.TryGetProperty("SelectedKey", out var selectedKeyElement))
                 {
                     SelectedKey = selectedKeyElement.GetString();
+                }
+                if (settings.TryGetProperty("Button1Text", out var button1TextElement))
+                {
+                    Button1Text = button1TextElement.GetString();
+                }
+                if (settings.TryGetProperty("Button2Text", out var button2TextElement))
+                {
+                    Button2Text = button2TextElement.GetString();
+                }
+                if (settings.TryGetProperty("Button3Text", out var button3TextElement))
+                {
+                    Button3Text = button3TextElement.GetString();
+                }
+                if (settings.TryGetProperty("Button4Text", out var button4TextElement))
+                {
+                    Button4Text = button4TextElement.GetString();
+                }
+                if (settings.TryGetProperty("PanelOpacity", out var panelOpacityElement))
+                {
+                    PanelOpacity = panelOpacityElement.GetDouble();
+                }
+                if (settings.TryGetProperty("PanelColor", out var panelColorElement))
+                {
+                    PanelColor = panelColorElement.GetString();
                 }
             }
         }

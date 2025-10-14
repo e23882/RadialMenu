@@ -15,7 +15,8 @@
         x:Name="RootLayout"
         Width="200"
         Height="200"
-        MouseLeave="RootLayout_MouseLeave">
+        MouseLeave="RootLayout_MouseLeave"
+        Opacity="{Binding PanelOpacity}">
         <Grid.Resources>
             <!--  Style for the pie-slice buttons  -->
             <Style x:Key="PieSliceButton" TargetType="Button">
@@ -27,7 +28,7 @@
                                 <Path
                                     x:Name="ButtonPath"
                                     Data="M 100,100 L 100,0 A 100,100 0 0 1 200,100 Z"
-                                    Fill="#AA222222"
+                                    Fill="{TemplateBinding Background}"
                                     Stroke="#FF555555"
                                     StrokeThickness="1" />
                                 <!--  The ContentPresenter displays the button's content (e.g., text)  -->
@@ -53,7 +54,8 @@
         <!--  Top Button  -->
         <Button
             Command="{Binding TopButtonClickCommand}"
-            Content="Top"
+            Content="{Binding Button1Text}"
+            Background="{Binding PanelColor}"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
             <Button.RenderTransform>
@@ -64,7 +66,8 @@
         <!--  Right Button  -->
         <Button
             Command="{Binding RightButtonClickCommand}"
-            Content="Right"
+            Content="{Binding Button2Text}"
+            Background="{Binding PanelColor}"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
             <Button.RenderTransform>
@@ -75,7 +78,8 @@
         <!--  Bottom Button  -->
         <Button
             Command="{Binding ButtonSideButtonClickCommand}"
-            Content="Bottom"
+            Content="{Binding Button3Text}"
+            Background="{Binding PanelColor}"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
             <Button.RenderTransform>
@@ -86,7 +90,8 @@
         <!--  Left Button  -->
         <Button
             Command="{Binding LeftButtonClickCommand}"
-            Content="Left"
+            Content="{Binding Button4Text}"
+            Background="{Binding PanelColor}"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
             <Button.RenderTransform>
