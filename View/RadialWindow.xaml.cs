@@ -1,17 +1,23 @@
+using Autofac;
 using System.Windows;
 
 namespace RadialMenu
 {
     public partial class RadialWindow : Window
     {
+        #region Properties
+        public RadialWindowViewModel ViewModel { get; set; }
+        #endregion
+
+        #region Public Methods
         public RadialWindow()
         {
             InitializeComponent();
+            ViewModel = App.Container.Resolve<RadialWindowViewModel>();
+            this.DataContext = ViewModel;
         }
-
         private void RootLayout_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            // When the mouse leaves the window area, hide it.
             this.Hide();
         }
 
@@ -27,5 +33,6 @@ namespace RadialMenu
             this.Show();
             this.Activate();
         }
+        #endregion
     }
 }

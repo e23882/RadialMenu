@@ -1,13 +1,35 @@
-using System;
+using Autofac;
 using System.Windows;
 
 namespace RadialMenu
 {
     public partial class App : System.Windows.Application
     {
-        private System.Windows.Forms.NotifyIcon _notifyIcon;
+        #region Fields
+        private NotifyIcon _notifyIcon;
         private RadialWindow _radialWindow;
         private SettingsWindow _settingsWindow;
+        #endregion
+
+        #region Properties
+        public static IContainer Container { get; set; }
+        #endregion
+
+        #region MemberFunction
+        public App()
+        {
+            InitialDIContainer();
+        }
+
+        public void InitialDIContainer()
+        {
+            var builder = new ContainerBuilder();
+            
+            builder.RegisterType<RadialWindowViewModel>()
+                .SingleInstance();
+
+            Container = builder.Build();
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -18,12 +40,12 @@ namespace RadialMenu
             _radialWindow = new RadialWindow();
             _settingsWindow = new SettingsWindow();
 
-            _notifyIcon = new System.Windows.Forms.NotifyIcon();
-            _notifyIcon.Icon = System.Drawing.SystemIcons.Application;
+            _notifyIcon = new NotifyIcon();
+            _notifyIcon.Icon = SystemIcons.Application;
             _notifyIcon.Visible = true;
             _notifyIcon.Text = "RadialMenu";
 
-            _notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+            _notifyIcon.ContextMenuStrip = new ContextMenuStrip();
             _notifyIcon.ContextMenuStrip.Items.Add("Settings", null, OnSettingsClicked);
             _notifyIcon.ContextMenuStrip.Items.Add("Exit", null, OnExitClicked);
 
@@ -54,5 +76,6 @@ namespace RadialMenu
 
             base.OnExit(e);
         }
+        #endregion
     }
 }
