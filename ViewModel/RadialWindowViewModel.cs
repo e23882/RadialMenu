@@ -6,10 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.IO;
+using System.Text.Json;
 
 namespace RadialMenu
 {
-    public class RadialWindowViewModel:ViewModelBase
+    public class RadialWindowViewModel : ViewModelBase
     {
         #region Fields
         #endregion
@@ -59,6 +61,39 @@ namespace RadialMenu
             }
         }
 
+        private double _button1ContentRotationAngle;
+        public double Button1ContentRotationAngle
+        {
+            get { return _button1ContentRotationAngle; }
+            set
+            {
+                _button1ContentRotationAngle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _button3ContentRotationAngle;
+        public double Button3ContentRotationAngle
+        {
+            get { return _button3ContentRotationAngle; }
+            set
+            {
+                _button3ContentRotationAngle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _button4ContentRotationAngle;
+        public double Button4ContentRotationAngle
+        {
+            get { return _button4ContentRotationAngle; }
+            set
+            {
+                _button4ContentRotationAngle = value;
+                OnPropertyChanged();
+            }
+        }
+
         private double _panelOpacity;
         public double PanelOpacity
         {
@@ -77,6 +112,17 @@ namespace RadialMenu
             set
             {
                 _panelColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _fontSize;
+        public double FontSize
+        {
+            get { return _fontSize; }
+            set
+            {
+                _fontSize = value;
                 OnPropertyChanged();
             }
         }
@@ -119,6 +165,14 @@ namespace RadialMenu
         #endregion
 
         #region MemberFunction
+        private void InitialCommand()
+        {
+            TopButtonClickCommand = new RelayCommand(TopButtonClickCommandAction);
+            RightButtonClickCommand = new RelayCommand(RightButtonClickCommandAction);
+            ButtonSideButtonClickCommand = new RelayCommand(ButtonSideButtonClickCommandAction);
+            LeftButtonClickCommand = new RelayCommand(LeftButtonClickCommandAction);
+        }
+
         public RadialWindowViewModel()
         {
             InitialCommand();
@@ -126,16 +180,36 @@ namespace RadialMenu
             Button2Text = "Button 2";
             Button3Text = "Button 3";
             Button4Text = "Button 4";
+            Button1ContentRotationAngle = 90;
+            Button3ContentRotationAngle = -90;
+            Button4ContentRotationAngle = 180;
             PanelOpacity = 0.8;
             PanelColor = System.Windows.Media.Brushes.Gray;
+            LoadSettings();
         }
 
-        private void InitialCommand()
+        private void LoadSettings()
         {
-            TopButtonClickCommand = new RelayCommand(TopButtonClickCommandAction);
-            RightButtonClickCommand = new RelayCommand(RightButtonClickCommandAction);
-            ButtonSideButtonClickCommand = new RelayCommand(ButtonSideButtonClickCommandAction);
-            LeftButtonClickCommand = new RelayCommand(LeftButtonClickCommandAction);
+            if (File.Exists("settings.json"))
+            {
+                string jsonString = File.ReadAllText("settings.json");
+                AppSettings settings = JsonSerializer.Deserialize<AppSettings>(jsonString);
+                PanelOpacity = settings.PanelOpacity;
+                PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(settings.PanelColor);
+                FontSize = settings.FontSize;
+            }
+            else
+            {
+                // Set default values if settings file doesn't exist
+                PanelOpacity = 0.8;
+                PanelColor = System.Windows.Media.Brushes.Gray;
+                FontSize = 12;
+            }
+        }
+
+        private void InitialSelection()
+        {
+            var mouseButtons = Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>();
         }
 
         #endregion

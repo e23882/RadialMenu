@@ -32,10 +32,11 @@
                                     Stroke="#FF555555"
                                     StrokeThickness="1" />
                                 <!--  The ContentPresenter displays the button's content (e.g., text)  -->
-                                <ContentPresenter
-                                    Margin="0,0,35,35"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center" />
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <ContentPresenter.RenderTransform>
+                                        <TranslateTransform X="50" Y="-50" />
+                                    </ContentPresenter.RenderTransform>
+                                </ContentPresenter>
                             </Grid>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -51,49 +52,91 @@
             </Style>
         </Grid.Resources>
 
-        <!--  Top Button  -->
+        <!--  左上 Button  -->
         <Button
-            Command="{Binding TopButtonClickCommand}"
-            Content="{Binding Button1Text}"
+            x:Name="Button1"
             Background="{Binding PanelColor}"
+            Command="{Binding TopButtonClickCommand}"
+            FontSize="20"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
+            <Button.Content>
+                <TextBlock FontSize="{Binding FontSize}" Text="{Binding Button1Text}">
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="{Binding Button1ContentRotationAngle}" />
+                            <TranslateTransform X="15" Y="-8" />
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Button.Content>
             <Button.RenderTransform>
                 <RotateTransform Angle="-90" />
             </Button.RenderTransform>
         </Button>
 
-        <!--  Right Button  -->
+        <!--  右上 Button  -->
         <Button
-            Command="{Binding RightButtonClickCommand}"
-            Content="{Binding Button2Text}"
+            x:Name="Button2"
             Background="{Binding PanelColor}"
+            Command="{Binding RightButtonClickCommand}"
+            FontSize="{Binding FontSize}"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
             <Button.RenderTransform>
                 <RotateTransform Angle="0" />
             </Button.RenderTransform>
+            <Button.Content>
+                <TextBlock FontSize="{Binding FontSize}" Text="{Binding Button2Text}">
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform X="-10" Y="20" />
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Button.Content>
         </Button>
 
-        <!--  Bottom Button  -->
+        <!--  右下 Button  -->
         <Button
-            Command="{Binding ButtonSideButtonClickCommand}"
-            Content="{Binding Button3Text}"
+            x:Name="Button3"
             Background="{Binding PanelColor}"
+            Command="{Binding ButtonSideButtonClickCommand}"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
+            <Button.Content>
+                <TextBlock FontSize="{Binding FontSize}" Text="{Binding Button3Text}">
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="{Binding Button3ContentRotationAngle}" />
+                            <TranslateTransform X="-4" Y="50" />
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Button.Content>
             <Button.RenderTransform>
                 <RotateTransform Angle="90" />
             </Button.RenderTransform>
         </Button>
 
-        <!--  Left Button  -->
+        <!--  左下 Button  -->
         <Button
-            Command="{Binding LeftButtonClickCommand}"
-            Content="{Binding Button4Text}"
+            x:Name="Button4"
             Background="{Binding PanelColor}"
+            Command="{Binding LeftButtonClickCommand}"
+            FontSize="20"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
+            <Button.Content>
+                <TextBlock FontSize="{Binding FontSize}" Text="{Binding Button4Text}">
+                    <TextBlock.RenderTransform>
+                        <TransformGroup>
+                            <RotateTransform Angle="{Binding Button4ContentRotationAngle}" />
+                            <TranslateTransform X="50" Y="40" />
+                        </TransformGroup>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Button.Content>
             <Button.RenderTransform>
                 <RotateTransform Angle="180" />
             </Button.RenderTransform>

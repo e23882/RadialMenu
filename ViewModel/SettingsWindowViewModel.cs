@@ -25,15 +25,106 @@ namespace RadialMenu.ViewModel
                 OnPropertyChanged();
             }
         }
-        public bool MouseMenuEnable { get; set; }
-        public string SelectedKey { get; set; }
-        public string Button1Text { get; set; }
-        public string Button2Text { get; set; }
-        public string Button3Text { get; set; }
-        public string Button4Text { get; set; }
-        public double PanelOpacity { get; set; }
-        public string PanelColor { get; set; }
+        private bool _mouseMenuEnable;
+        public bool MouseMenuEnable
+        {
+            get { return _mouseMenuEnable; }
+            set
+            {
+                _mouseMenuEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _selectedKey;
+        public string SelectedKey
+        {
+            get { return _selectedKey; }
+            set
+            {
+                _selectedKey = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _button1Text;
+        public string Button1Text
+        {
+            get { return _button1Text; }
+            set
+            {
+                _button1Text = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _button2Text;
+        public string Button2Text
+        {
+            get { return _button2Text; }
+            set
+            {
+                _button2Text = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _button3Text;
+        public string Button3Text
+        {
+            get { return _button3Text; }
+            set
+            {
+                _button3Text = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _button4Text;
+        public string Button4Text
+        {
+            get { return _button4Text; }
+            set
+            {
+                _button4Text = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _panelOpacity;
+        public double PanelOpacity
+        {
+            get { return _panelOpacity; }
+            set
+            {
+                _panelOpacity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _panelColor;
+        public string PanelColor
+        {
+            get { return _panelColor; }
+            set
+            {
+                _panelColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private double _fontSize;
+        public double FontSize
+        {
+            get { return _fontSize; }
+            set
+            {
+                _fontSize = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<string> ColorOptions { get; set; }
+        public ICommand ChooseColorCommand { get; set; }
         public RelayCommand MouseMenuKeyDownCommand { get; set; }
 
         /// <summary>
@@ -54,16 +145,17 @@ namespace RadialMenu.ViewModel
         public ICommand SaveSettingCommand { get; set; }
         private void SaveSettingCommandAction(object? obj)
         {
-            var settings = new 
+            var settings = new AppSettings
             {
-                MouseMenuEnable,
-                SelectedKey,
-                Button1Text,
-                Button2Text,
-                Button3Text,
-                Button4Text,
-                PanelOpacity,
-                PanelColor
+                MouseMenuEnable = this.MouseMenuEnable,
+                SelectedKey = this.SelectedKey,
+                Button1Text = this.Button1Text,
+                Button2Text = this.Button2Text,
+                Button3Text = this.Button3Text,
+                Button4Text = this.Button4Text,
+                PanelOpacity = this.PanelOpacity,
+                PanelColor = this.PanelColor,
+                FontSize = this.FontSize
             };
             string jsonString = JsonSerializer.Serialize(settings);
             File.WriteAllText("settings.json", jsonString);
@@ -107,6 +199,7 @@ namespace RadialMenu.ViewModel
             Button4Text = "Button 4";
             PanelOpacity = 0.8;
             PanelColor = "Gray";
+            FontSize = 12; // Default value
             ColorOptions = new ObservableCollection<string> { "Gray", "Black", "White", "Red", "Green", "Blue" };
             LoadSettings();
         }
@@ -116,39 +209,16 @@ namespace RadialMenu.ViewModel
             if (File.Exists("settings.json"))
             {
                 string jsonString = File.ReadAllText("settings.json");
-                var settings = JsonSerializer.Deserialize<JsonElement>(jsonString);
-                if (settings.TryGetProperty("MouseMenuEnable", out var mouseMenuEnableElement))
-                {
-                    MouseMenuEnable = mouseMenuEnableElement.GetBoolean();
-                }
-                if (settings.TryGetProperty("SelectedKey", out var selectedKeyElement))
-                {
-                    SelectedKey = selectedKeyElement.GetString();
-                }
-                if (settings.TryGetProperty("Button1Text", out var button1TextElement))
-                {
-                    Button1Text = button1TextElement.GetString();
-                }
-                if (settings.TryGetProperty("Button2Text", out var button2TextElement))
-                {
-                    Button2Text = button2TextElement.GetString();
-                }
-                if (settings.TryGetProperty("Button3Text", out var button3TextElement))
-                {
-                    Button3Text = button3TextElement.GetString();
-                }
-                if (settings.TryGetProperty("Button4Text", out var button4TextElement))
-                {
-                    Button4Text = button4TextElement.GetString();
-                }
-                if (settings.TryGetProperty("PanelOpacity", out var panelOpacityElement))
-                {
-                    PanelOpacity = panelOpacityElement.GetDouble();
-                }
-                if (settings.TryGetProperty("PanelColor", out var panelColorElement))
-                {
-                    PanelColor = panelColorElement.GetString();
-                }
+                AppSettings settings = JsonSerializer.Deserialize<AppSettings>(jsonString);
+                MouseMenuEnable = settings.MouseMenuEnable;
+                SelectedKey = settings.SelectedKey;
+                Button1Text = settings.Button1Text;
+                Button2Text = settings.Button2Text;
+                Button3Text = settings.Button3Text;
+                Button4Text = settings.Button4Text;
+                PanelOpacity = settings.PanelOpacity;
+                PanelColor = settings.PanelColor;
+                FontSize = settings.FontSize;
             }
         }
 
@@ -168,6 +238,16 @@ namespace RadialMenu.ViewModel
             MouseMenuKeyUpCommand = new RelayCommand(MouseMenuKeyUpCommandAction);
             SaveSettingCommand = new RelayCommand(SaveSettingCommandAction);
             CancelCommand = new RelayCommand(CancelCommandAction);
+            ChooseColorCommand = new RelayCommand(ChooseColorCommandAction);
+        }
+
+        private void ChooseColorCommandAction(object? obj)
+        {
+            var colorDialog = new System.Windows.Forms.ColorDialog();
+            if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                PanelColor = $"#{colorDialog.Color.R:X2}{colorDialog.Color.G:X2}{colorDialog.Color.B:X2}";
+            }
         }
         #endregion
     }

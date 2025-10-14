@@ -1,0 +1,17 @@
+using System.Windows.Media;
+
+namespace RadialMenu
+{
+    public class AppSettings
+    {
+        public bool MouseMenuEnable { get; set; }
+        public string SelectedKey { get; set; }
+        public string Button1Text { get; set; }
+        public string Button2Text { get; set; }
+        public string Button3Text { get; set; }
+        public string Button4Text { get; set; }
+        public double PanelOpacity { get; set; }
+        public string PanelColor { get; set; }
+        public double FontSize { get; set; } = 12; // Default font size
+    }
+}

@@ -11,6 +11,10 @@ namespace RadialMenu
         private const int WM_LBUTTONDOWN = 0x0201;
         private const int WM_RBUTTONDOWN = 0x0204;
         private const int WM_MBUTTONDOWN = 0x0207;
+        private const int WM_XBUTTONDOWN = 0x020B;
+
+        private const int XBUTTON1 = 0x0001;
+        private const int XBUTTON2 = 0x0002;
 
         private static HookProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
@@ -18,6 +22,8 @@ namespace RadialMenu
         public static event EventHandler<System.Windows.Point> LeftMouseButtonClicked;
         public static event EventHandler<System.Windows.Point> RightMouseButtonClicked;
         public static event EventHandler<System.Windows.Point> MiddleMouseButtonClicked;
+        public static event EventHandler<System.Windows.Point> XButton1Clicked;
+        public static event EventHandler<System.Windows.Point> XButton2Clicked;
 
         public static void Start()
         {
@@ -57,6 +63,16 @@ namespace RadialMenu
                         break;
                     case WM_MBUTTONDOWN:
                         MiddleMouseButtonClicked?.Invoke(null, point);
+                        break;
+                    case WM_XBUTTONDOWN:
+                        if (hookStruct.mouseData >> 16 == XBUTTON1)
+                        {
+                            XButton1Clicked?.Invoke(null, point);
+                        }
+                        else if (hookStruct.mouseData >> 16 == XBUTTON2)
+                        {
+                            XButton2Clicked?.Invoke(null, point);
+                        }
                         break;
                 }
             }
