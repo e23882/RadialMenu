@@ -1,9 +1,6 @@
 using RadialMenu.Utility;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Windows.Input;
 
@@ -79,6 +76,9 @@ namespace RadialMenu.ViewModel
         #endregion
 
         #region MemberFunction
+        /// <summary>
+        /// 
+        /// </summary>
         public SettingsWindowViewModel()
         {
             InitialCommand();
@@ -106,15 +106,8 @@ namespace RadialMenu.ViewModel
 
         private void InitialSelection()
         {
-            var allKeys = new List<object>();
-
-            var keyboardKeys = Enum.GetValues(typeof(Key)).Cast<Key>();
-            allKeys.AddRange(keyboardKeys.Cast<object>());
-
-            // 3. 取得所有滑鼠按鍵 (MouseButton enum) 並加入列表
             var mouseButtons = Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>();
-            allKeys.AddRange(mouseButtons.Cast<object>());
-            foreach(var item in allKeys)
+            foreach(var item in mouseButtons)
             {
                 AllKeyCollection.Add(item.ToString());
             }

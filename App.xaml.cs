@@ -1,5 +1,7 @@
 using Autofac;
 using RadialMenu.ViewModel;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 
 namespace RadialMenu
@@ -50,11 +52,42 @@ namespace RadialMenu
             _notifyIcon.ContextMenuStrip.Items.Add("Settings", null, OnSettingsClicked);
             _notifyIcon.ContextMenuStrip.Items.Add("Exit", null, OnExitClicked);
 
-            LowLevelMouseHook.MiddleMouseClicked += OnMiddleMouseClicked;
+            UpdateHook();
+
             LowLevelMouseHook.Start();
         }
 
-        private void OnMiddleMouseClicked(object sender, System.Windows.Point e)
+        private void UpdateHook()
+        {
+            // Clear existing hooks
+            LowLevelMouseHook.LeftMouseButtonClicked -= OnMouseButtonClicked;
+            LowLevelMouseHook.RightMouseButtonClicked -= OnMouseButtonClicked;
+            LowLevelMouseHook.MiddleMouseButtonClicked -= OnMouseButtonClicked;
+
+            if (File.Exists("settings.json"))
+            {
+                string jsonString = File.ReadAllText("settings.json");
+                var settings = JsonSerializer.Deserialize<JsonElement>(jsonString);
+                if (settings.TryGetProperty("SelectedKey", out var selectedKeyElement))
+                {
+                    string selectedKey = selectedKeyElement.GetString();
+                    switch (selectedKey)
+                    {
+                        case "Left":
+                            LowLevelMouseHook.LeftMouseButtonClicked += OnMouseButtonClicked;
+                            break;
+                        case "Right":
+                            LowLevelMouseHook.RightMouseButtonClicked += OnMouseButtonClicked;
+                            break;
+                        case "Middle":
+                            LowLevelMouseHook.MiddleMouseButtonClicked += OnMouseButtonClicked;
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void OnMouseButtonClicked(object sender, System.Windows.Point e)
         {
             _radialWindow.ShowAt(e.X, e.Y);
         }
@@ -62,8 +95,14 @@ namespace RadialMenu
         private void OnSettingsClicked(object sender, EventArgs e)
         {
             var _settingsWindow = new SettingsWindow();
+            _settingsWindow.Closed += _settingsWindow_Closed;
             _settingsWindow.Show();
             _settingsWindow.Activate();
+        }
+
+        private void _settingsWindow_Closed(object? sender, EventArgs e)
+        {
+            UpdateHook();
         }
 
         private void OnExitClicked(object sender, EventArgs e)

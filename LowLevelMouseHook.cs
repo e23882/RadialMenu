@@ -8,12 +8,16 @@ namespace RadialMenu
     public static class LowLevelMouseHook
     {
         private const int WH_MOUSE_LL = 14;
+        private const int WM_LBUTTONDOWN = 0x0201;
+        private const int WM_RBUTTONDOWN = 0x0204;
         private const int WM_MBUTTONDOWN = 0x0207;
 
         private static HookProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
 
-        public static event EventHandler<System.Windows.Point> MiddleMouseClicked;
+        public static event EventHandler<System.Windows.Point> LeftMouseButtonClicked;
+        public static event EventHandler<System.Windows.Point> RightMouseButtonClicked;
+        public static event EventHandler<System.Windows.Point> MiddleMouseButtonClicked;
 
         public static void Start()
         {
@@ -38,10 +42,23 @@ namespace RadialMenu
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            if (nCode >= 0 && wParam == WM_MBUTTONDOWN)
+            if (nCode >= 0)
             {
                 MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-                MiddleMouseClicked?.Invoke(null, new System.Windows.Point(hookStruct.pt.x, hookStruct.pt.y));
+                System.Windows.Point point = new System.Windows.Point(hookStruct.pt.x, hookStruct.pt.y);
+
+                switch (wParam.ToInt32())
+                {
+                    case WM_LBUTTONDOWN:
+                        LeftMouseButtonClicked?.Invoke(null, point);
+                        break;
+                    case WM_RBUTTONDOWN:
+                        RightMouseButtonClicked?.Invoke(null, point);
+                        break;
+                    case WM_MBUTTONDOWN:
+                        MiddleMouseButtonClicked?.Invoke(null, point);
+                        break;
+                }
             }
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }

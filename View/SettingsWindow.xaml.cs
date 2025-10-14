@@ -21,8 +21,7 @@ namespace RadialMenu
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            e.Cancel = true;
-            this.Hide();
+            
         }
         #endregion
     }
