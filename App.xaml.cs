@@ -18,6 +18,7 @@ namespace RadialMenu
         #endregion
 
         #region Properties
+        public bool IsFirstTime { get; set; } = true;
         public static IContainer Container { get; set; }
         #endregion
 
@@ -118,7 +119,14 @@ namespace RadialMenu
 
         private void OnMouseButtonClicked(object sender, System.Windows.Point e)
         {
-            _radialWindow.ShowAt(e.X, e.Y);
+            if (IsFirstTime)
+            {
+                _radialWindow.ShowAt(e.X, e.Y);
+                _radialWindow.Hide();
+                _radialWindow.ShowAt(e.X, e.Y);
+            }
+            else
+                _radialWindow.ShowAt(e.X, e.Y);
         }
 
         private void OnSettingsClicked(object sender, EventArgs e)
