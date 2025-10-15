@@ -23,6 +23,7 @@ namespace RadialMenu
             ViewModel.CurrentWindow = this;
             this.DataContext = ViewModel;
             CreateStoryboard();
+            this.Visibility = Visibility.Hidden; // Ensure window is hidden by default
         }
 
         private void CreateStoryboard()

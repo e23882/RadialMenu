@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Diagnostics; // Added for Process.Start
 
 namespace RadialMenu
 {
@@ -196,6 +197,17 @@ namespace RadialMenu
                             break;
                         case MacroActionType.Delay:
                             InputSimulator.SimulateDelay(step.DelayMilliseconds);
+                            break;
+                        case MacroActionType.WindowCommand:
+                            try
+                            {
+                                Process.Start(step.Script);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log or handle the exception as needed
+                                Console.WriteLine($"Error executing command: {ex.Message}");
+                            }
                             break;
                     }
                 }

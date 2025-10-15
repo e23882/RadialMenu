@@ -265,7 +265,14 @@
                             <GridViewColumn Width="100" Header="延遲 (ms)">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={StaticResource DelayValueConverter}}" />
+                                        <TextBlock Text="{Binding DelayMilliseconds, Converter={StaticResource DelayValueConverter}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn>
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Script}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -295,28 +302,33 @@
                         VerticalAlignment="Center"
                         Text="動作類型:" />
                     <ComboBox
-                        Width="120"
+                        Width="140"
                         ItemsSource="{Binding AllMacroActionTypes}"
                         SelectedItem="{Binding NewMacroActionType}" />
-                    <TextBlock
-                        Margin="10,0,5,0"
-                        VerticalAlignment="Center"
-                        Text="按鍵:" />
-                    <ComboBox
-                        Width="120"
-                        ItemsSource="{Binding AllKeys}"
-                        SelectedItem="{Binding NewMacroKey}">
-                        <ComboBox.Style>
-                            <Style TargetType="ComboBox">
-                                <Setter Property="IsEnabled" Value="True" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Visible" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding NewMacroActionType}" Value="Delay">
-                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding NewMacroActionType}" Value="WindowCommand">
+                                        <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ComboBox.Style>
-                    </ComboBox>
+                        </StackPanel.Style>
+                        <TextBlock
+                            Margin="10,0,5,0"
+                            VerticalAlignment="Center"
+                            Text="按鍵:" />
+                        <ComboBox
+                            Width="130"
+                            ItemsSource="{Binding AllKeys}"
+                            SelectedItem="{Binding NewMacroKey}" />
+                    </StackPanel>
                 </StackPanel>
 
                 <StackPanel
@@ -324,26 +336,70 @@
                     Grid.ColumnSpan="4"
                     Margin="5"
                     Orientation="Horizontal">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="KeyPress">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="KeyRelease">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="MouseLeftPress">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="MouseLeftRelease">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="MouseRightPress">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="MouseRightRelease">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="WindowCommand">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock
                         Margin="0,0,5,0"
                         VerticalAlignment="Center"
                         Text="延遲 (ms):" />
-                    <TextBox Width="100" Text="{Binding NewMacroDelayMilliseconds}">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Setter Property="IsEnabled" Value="False" />
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding NewMacroActionType}" Value="Delay">
-                                        <Setter Property="IsEnabled" Value="True" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
+                    <TextBox Width="100" Text="{Binding NewMacroDelayMilliseconds}" />
                 </StackPanel>
 
                 <StackPanel
                     Grid.Row="4"
+                    Grid.ColumnSpan="4"
+                    Margin="5"
+                    Orientation="Vertical">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding NewMacroActionType}" Value="WindowCommand">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="Script:" />
+                    <TextBox
+                        Height="80"
+                        AcceptsReturn="True"
+                        Text="{Binding NewMacroScript}"
+                        TextWrapping="Wrap"
+                        VerticalScrollBarVisibility="Auto" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="5"
                     Grid.ColumnSpan="4"
                     Margin="5"
                     HorizontalAlignment="Right"

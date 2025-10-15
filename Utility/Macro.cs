@@ -16,7 +16,8 @@ namespace RadialMenu.Utility
         MouseLeftRelease,
         MouseRightPress,
         MouseRightRelease,
-        Delay
+        Delay,
+        WindowCommand
     }
 
     public class MacroStep : INotifyPropertyChanged
@@ -59,6 +60,20 @@ namespace RadialMenu.Utility
                 {
                     _delayMilliseconds = value;
                     OnPropertyChanged(nameof(DelayMilliseconds));
+                }
+            }
+        }
+
+        private string _script;
+        public string Script
+        {
+            get => _script;
+            set
+            {
+                if (_script != value)
+                {
+                    _script = value;
+                    OnPropertyChanged(nameof(Script));
                 }
             }
         }

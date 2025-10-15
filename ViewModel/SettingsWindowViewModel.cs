@@ -203,6 +203,21 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        private string _newMacroScript;
+        public string NewMacroScript
+        {
+            get => _newMacroScript;
+            set
+            {
+                if (_newMacroScript != value)
+                {
+                    _newMacroScript = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanAddMacroStep));
+                }
+            }
+        }
+
         public bool CanAddMacroStep
         {
             get
@@ -210,6 +225,10 @@ namespace RadialMenu.ViewModel
                 if (NewMacroActionType == MacroActionType.Delay)
                 {
                     return NewMacroDelayMilliseconds >= 0; // Delay must be non-negative
+                }
+                else if (NewMacroActionType == MacroActionType.WindowCommand)
+                {
+                    return !string.IsNullOrWhiteSpace(NewMacroScript); // Script must not be empty for WindowCommand
                 }
                 else
                 {
@@ -274,8 +293,9 @@ namespace RadialMenu.ViewModel
             var newStep = new MacroStep
             {
                 ActionType = NewMacroActionType,
-                Key = NewMacroActionType == MacroActionType.Delay ? Key.None : NewMacroKey, // Key is only relevant for non-delay actions
-                DelayMilliseconds = NewMacroActionType == MacroActionType.Delay ? NewMacroDelayMilliseconds : 0
+                Key = NewMacroActionType == MacroActionType.Delay || NewMacroActionType == MacroActionType.WindowCommand ? Key.None : NewMacroKey, // Key is only relevant for non-delay and non-WindowCommand actions
+                DelayMilliseconds = NewMacroActionType == MacroActionType.Delay ? NewMacroDelayMilliseconds : 0,
+                Script = NewMacroActionType == MacroActionType.WindowCommand ? NewMacroScript : string.Empty
             };
 
             if (SelectedMacroStep != null)
@@ -367,6 +387,7 @@ namespace RadialMenu.ViewModel
             NewMacroActionType = MacroActionType.KeyPress;
             NewMacroKey = Key.None;
             NewMacroDelayMilliseconds = 0;
+            NewMacroScript = string.Empty;
             CurrentMacroSteps = new ObservableCollection<MacroStep>();
             SelectedButtonIndex = 1; // Default to button 1
 
