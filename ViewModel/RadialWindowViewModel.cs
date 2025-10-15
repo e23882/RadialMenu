@@ -201,7 +201,15 @@ namespace RadialMenu
                         case MacroActionType.WindowCommand:
                             try
                             {
-                                Process.Start(step.Script);
+                                ProcessStartInfo startInfo = new ProcessStartInfo
+                                {
+                                    FileName = step.Script,
+                                    Arguments = $"/C \"{step.Script}\"", // /C executes the command and then terminates
+                                    UseShellExecute = false,
+                                    CreateNoWindow = false,
+                                    WorkingDirectory = "C:\\" // Set the working directory to C: drive
+                                };
+                                Process.Start(startInfo);
                             }
                             catch (Exception ex)
                             {

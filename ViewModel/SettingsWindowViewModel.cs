@@ -159,8 +159,26 @@ namespace RadialMenu.ViewModel
             get => _selectedMacroStep;
             set
             {
-                _selectedMacroStep = value;
-                OnPropertyChanged();
+                if (_selectedMacroStep != value)
+                {
+                    _selectedMacroStep = value;
+                    OnPropertyChanged();
+                    if (_selectedMacroStep != null)
+                    {
+                        NewMacroActionType = _selectedMacroStep.ActionType;
+                        NewMacroKey = _selectedMacroStep.Key;
+                        NewMacroDelayMilliseconds = _selectedMacroStep.DelayMilliseconds;
+                        NewMacroScript = _selectedMacroStep.Script;
+                    }
+                    else
+                    {
+                        // Clear the input fields if nothing is selected
+                        NewMacroActionType = MacroActionType.KeyPress; // Default value
+                        NewMacroKey = Key.None;
+                        NewMacroDelayMilliseconds = 0;
+                        NewMacroScript = string.Empty;
+                    }
+                }
             }
         }
 

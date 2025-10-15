@@ -6,7 +6,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:utility="clr-namespace:RadialMenu.Utility"
     Title="Settings"
-    Width="500"
+    Width="800"
     Height="400">
     <Window.Resources>
         <utility:StringToBrushConverter x:Key="StringToBrushConverter" />
@@ -90,13 +90,13 @@
 
                     <TextBox
                         Grid.Row="1"
-                        Grid.Column="0"
+                        Grid.Column="1"
                         Margin="5"
                         HorizontalContentAlignment="Center"
                         Text="{Binding Button3Text}" />
                     <TextBox
                         Grid.Row="1"
-                        Grid.Column="1"
+                        Grid.Column="0"
                         Margin="5"
                         HorizontalContentAlignment="Center"
                         Text="{Binding Button4Text}" />
@@ -228,14 +228,14 @@
                             IsChecked="{Binding SelectedButtonIndex, ConverterParameter=2, Converter={StaticResource IntToBoolConverter}}" />
                         <RadioButton
                             Grid.Row="1"
-                            Grid.Column="0"
+                            Grid.Column="1"
                             Margin="5"
                             Content="按鈕 3"
                             GroupName="MacroButton"
                             IsChecked="{Binding SelectedButtonIndex, ConverterParameter=3, Converter={StaticResource IntToBoolConverter}}" />
                         <RadioButton
                             Grid.Row="1"
-                            Grid.Column="1"
+                            Grid.Column="0"
                             Margin="5"
                             Content="按鈕 4"
                             GroupName="MacroButton"
@@ -252,31 +252,31 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn
-                                Width="100"
+                                Width="130"
                                 DisplayMemberBinding="{Binding ActionType}"
                                 Header="動作類型" />
-                            <GridViewColumn Width="100" Header="按鍵">
+                            <GridViewColumn Width="60" Header="按鍵">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Converter={StaticResource KeyDisplayConverter}}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Width="100" Header="延遲 (ms)">
+                            <GridViewColumn Width="80" Header="延遲 (ms)">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding DelayMilliseconds, Converter={StaticResource DelayValueConverter}}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn>
+                            <GridViewColumn Width="180" Header="Script">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Script}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
-                            <GridViewColumn Width="80" Header="操作">
+                            <GridViewColumn Width="60" Header="操作">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button
