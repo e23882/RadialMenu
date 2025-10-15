@@ -20,6 +20,7 @@ namespace RadialMenu
         {
             InitializeComponent();
             ViewModel = App.Container.Resolve<RadialWindowViewModel>();
+            ViewModel.CurrentWindow = this;
             this.DataContext = ViewModel;
             CreateStoryboard();
         }

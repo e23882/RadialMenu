@@ -132,6 +132,7 @@ namespace RadialMenu
         public ICommand TopButtonClickCommand { get; set; }
         private void TopButtonClickCommandAction(object? obj)
         {
+            CurrentWindow.Hide();
             ExecuteMacroForButton(1);
         }
 
@@ -141,6 +142,7 @@ namespace RadialMenu
         public ICommand RightButtonClickCommand { get; set; }
         private void RightButtonClickCommandAction(object? obj)
         {
+            CurrentWindow.Hide();
             ExecuteMacroForButton(2);
         }
 
@@ -150,6 +152,7 @@ namespace RadialMenu
         public ICommand ButtonSideButtonClickCommand { get; set; }
         private void ButtonSideButtonClickCommandAction(object? obj)
         {
+            CurrentWindow.Hide();
             ExecuteMacroForButton(3);
         }
 
@@ -157,8 +160,11 @@ namespace RadialMenu
         /// 
         /// </summary>
         public ICommand LeftButtonClickCommand { get; set; }
+        public RadialWindow CurrentWindow { get; internal set; }
+
         private void LeftButtonClickCommandAction(object? obj)
         {
+            CurrentWindow.Hide();
             ExecuteMacroForButton(4);
         }
 
