@@ -109,7 +109,16 @@ namespace RadialMenu.ViewModel
             get { return _panelColor; }
             set
             {
-                _panelColor = value;
+                try
+                {
+                    // Try to convert the color to see if it's valid
+                    new System.Windows.Media.BrushConverter().ConvertFromString(value);
+                    _panelColor = value;
+                }
+                catch (System.FormatException)
+                {
+                    // Ignore invalid color strings
+                }
                 OnPropertyChanged();
             }
         }

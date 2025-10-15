@@ -71,50 +71,69 @@ namespace RadialMenu
             LowLevelMouseHook.XButton1Clicked -= OnMouseButtonClicked;
             LowLevelMouseHook.XButton2Clicked -= OnMouseButtonClicked;
 
+            AppSettings settings;
             if (File.Exists("settings.json"))
             {
                 string jsonString = File.ReadAllText("settings.json");
-                AppSettings settings = JsonSerializer.Deserialize<AppSettings>(jsonString);
-                var radialMenuViewModel = Container.Resolve<RadialWindowViewModel>();
-
-                if (settings.MouseMenuEnable)
-                {
-                    switch (settings.SelectedKey)
-                    {
-                        case "Left":
-                            LowLevelMouseHook.LeftMouseButtonClicked += OnMouseButtonClicked;
-                            break;
-                        case "Right":
-                            LowLevelMouseHook.RightMouseButtonClicked += OnMouseButtonClicked;
-                            break;
-                        case "Middle":
-                            LowLevelMouseHook.MiddleMouseButtonClicked += OnMouseButtonClicked;
-                            break;
-                        case "XButton1":
-                            LowLevelMouseHook.XButton1Clicked += OnMouseButtonClicked;
-                            break;
-                        case "XButton2":
-                            LowLevelMouseHook.XButton2Clicked += OnMouseButtonClicked;
-                            break;
-                    }
-                }
-
-                radialMenuViewModel.Button1Text = settings.Button1Text;
-                radialMenuViewModel.Button2Text = settings.Button2Text;
-                radialMenuViewModel.Button3Text = settings.Button3Text;
-                radialMenuViewModel.Button4Text = settings.Button4Text;
-                radialMenuViewModel.PanelOpacity = settings.PanelOpacity;
-                radialMenuViewModel.PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(settings.PanelColor);
-                radialMenuViewModel.FontSize = settings.FontSize;
+                settings = JsonSerializer.Deserialize<AppSettings>(jsonString);
             }
             else
             {
-                // If settings.json doesn't exist, apply default values
-                var radialMenuViewModel = Container.Resolve<RadialWindowViewModel>();
-                radialMenuViewModel.PanelOpacity = 0.8;
-                radialMenuViewModel.PanelColor = System.Windows.Media.Brushes.Gray;
-                radialMenuViewModel.FontSize = 12;
+                // If settings.json doesn't exist, create and apply default settings
+                settings = new AppSettings
+                {
+                    MouseMenuEnable = true,
+                    SelectedKey = "Middle",
+                    Button1Text = "Button 1",
+                    Button2Text = "Button 2",
+                    Button3Text = "Button 3",
+                    Button4Text = "Button 4",
+                    PanelOpacity = 0.8,
+                    PanelColor = "#FF808080",
+                    FontSize = 12,
+                    ButtonMacros = new System.Collections.Generic.Dictionary<int, Utility.Macro>()
+                };
+                Utility.SettingsManager.SaveSettings(settings);
             }
+
+            var radialMenuViewModel = Container.Resolve<RadialWindowViewModel>();
+
+            if (settings.MouseMenuEnable)
+            {
+                switch (settings.SelectedKey)
+                {
+                    case "Left":
+                        LowLevelMouseHook.LeftMouseButtonClicked += OnMouseButtonClicked;
+                        break;
+                    case "Right":
+                        LowLevelMouseHook.RightMouseButtonClicked += OnMouseButtonClicked;
+                        break;
+                    case "Middle":
+                        LowLevelMouseHook.MiddleMouseButtonClicked += OnMouseButtonClicked;
+                        break;
+                    case "XButton1":
+                        LowLevelMouseHook.XButton1Clicked += OnMouseButtonClicked;
+                        break;
+                    case "XButton2":
+                        LowLevelMouseHook.XButton2Clicked += OnMouseButtonClicked;
+                        break;
+                }
+            }
+
+            radialMenuViewModel.Button1Text = settings.Button1Text;
+            radialMenuViewModel.Button2Text = settings.Button2Text;
+            radialMenuViewModel.Button3Text = settings.Button3Text;
+            radialMenuViewModel.Button4Text = settings.Button4Text;
+            radialMenuViewModel.PanelOpacity = settings.PanelOpacity;
+            try
+            {
+                radialMenuViewModel.PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(settings.PanelColor);
+            }
+            catch
+            {
+                radialMenuViewModel.PanelColor = System.Windows.Media.Brushes.Gray;
+            }
+            radialMenuViewModel.FontSize = settings.FontSize;
         }
 
         private void OnMouseButtonClicked(object sender, System.Windows.Point e)

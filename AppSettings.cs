@@ -13,7 +13,7 @@ namespace RadialMenu
         public string Button3Text { get; set; }
         public string Button4Text { get; set; }
         public double PanelOpacity { get; set; }
-        public string PanelColor { get; set; }
+        public string PanelColor { get; set; } = "Gray";
         public double FontSize { get; set; } = 12; // Default font size
         public Dictionary<int, Macro> ButtonMacros { get; set; } = new Dictionary<int, Macro>();
     }
