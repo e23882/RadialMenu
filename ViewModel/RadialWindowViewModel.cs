@@ -14,6 +14,7 @@ namespace RadialMenu
     public class RadialWindowViewModel : ViewModelBase
     {
         #region Fields
+        private AppSettings _appSettings; // Declare AppSettings field
         #endregion
 
         #region Properties
@@ -133,7 +134,7 @@ namespace RadialMenu
         public ICommand TopButtonClickCommand { get; set; }
         private void TopButtonClickCommandAction(object? obj)
         {
-            MessageBox.Show("Top");
+            ExecuteMacroForButton(1);
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace RadialMenu
         public ICommand RightButtonClickCommand { get; set; }
         private void RightButtonClickCommandAction(object? obj)
         {
-            MessageBox.Show("Right");
+            ExecuteMacroForButton(2);
         }
 
         /// <summary>
@@ -151,7 +152,7 @@ namespace RadialMenu
         public ICommand ButtonSideButtonClickCommand { get; set; }
         private void ButtonSideButtonClickCommandAction(object? obj)
         {
-            MessageBox.Show("Button");
+            ExecuteMacroForButton(3);
         }
 
         /// <summary>
@@ -160,7 +161,41 @@ namespace RadialMenu
         public ICommand LeftButtonClickCommand { get; set; }
         private void LeftButtonClickCommandAction(object? obj)
         {
-            MessageBox.Show("Left");
+            ExecuteMacroForButton(4);
+        }
+
+        private void ExecuteMacroForButton(int buttonIndex)
+        {
+            if (_appSettings.ButtonMacros.TryGetValue(buttonIndex, out Macro macro))
+            {
+                foreach (var step in macro.Steps)
+                {
+                    switch (step.ActionType)
+                    {
+                        case MacroActionType.KeyPress:
+                            InputSimulator.SimulateKeyPress(step.Key);
+                            break;
+                        case MacroActionType.KeyRelease:
+                            InputSimulator.SimulateKeyRelease(step.Key);
+                            break;
+                        case MacroActionType.MouseLeftPress:
+                            InputSimulator.SimulateMouseLeftPress();
+                            break;
+                        case MacroActionType.MouseLeftRelease:
+                            InputSimulator.SimulateMouseLeftRelease();
+                            break;
+                        case MacroActionType.MouseRightPress:
+                            InputSimulator.SimulateMouseRightPress();
+                            break;
+                        case MacroActionType.MouseRightRelease:
+                            InputSimulator.SimulateMouseRightRelease();
+                            break;
+                        case MacroActionType.Delay:
+                            InputSimulator.SimulateDelay(step.DelayMilliseconds);
+                            break;
+                    }
+                }
+            }
         }
         #endregion
 
@@ -193,17 +228,26 @@ namespace RadialMenu
             if (File.Exists("settings.json"))
             {
                 string jsonString = File.ReadAllText("settings.json");
-                AppSettings settings = JsonSerializer.Deserialize<AppSettings>(jsonString);
-                PanelOpacity = settings.PanelOpacity;
-                PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(settings.PanelColor);
-                FontSize = settings.FontSize;
+                _appSettings = JsonSerializer.Deserialize<AppSettings>(jsonString);
+                PanelOpacity = _appSettings.PanelOpacity;
+                PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(_appSettings.PanelColor);
+                FontSize = _appSettings.FontSize;
+                Button1Text = _appSettings.Button1Text;
+                Button2Text = _appSettings.Button2Text;
+                Button3Text = _appSettings.Button3Text;
+                Button4Text = _appSettings.Button4Text;
             }
             else
             {
                 // Set default values if settings file doesn't exist
+                _appSettings = new AppSettings(); // Initialize with default values
                 PanelOpacity = 0.8;
                 PanelColor = System.Windows.Media.Brushes.Gray;
                 FontSize = 12;
+                Button1Text = "Button 1";
+                Button2Text = "Button 2";
+                Button3Text = "Button 3";
+                Button4Text = "Button 4";
             }
         }
 

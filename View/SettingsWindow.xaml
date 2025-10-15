@@ -6,10 +6,11 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:utility="clr-namespace:RadialMenu.Utility"
     Title="Settings"
-    Width="400"
+    Width="450"
     Height="400">
     <Window.Resources>
         <utility:StringToBrushConverter x:Key="StringToBrushConverter" />
+        <utility:IntToBoolConverter x:Key="IntToBoolConverter" />
     </Window.Resources>
     <TabControl Margin="10">
         <TabItem Header="樣式">
@@ -178,11 +179,10 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -191,6 +191,129 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+
+                <StackPanel
+                    Grid.Row="0"
+                    Grid.ColumnSpan="4"
+                    Margin="5"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        Text="選擇按鈕:" />
+                    <RadioButton
+                        Margin="5,0"
+                        Content="按鈕 1"
+                        GroupName="MacroButton"
+                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=1, Converter={StaticResource IntToBoolConverter}}" />
+                    <RadioButton
+                        Margin="5,0"
+                        Content="按鈕 2"
+                        GroupName="MacroButton"
+                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=2, Converter={StaticResource IntToBoolConverter}}" />
+                    <RadioButton
+                        Margin="5,0"
+                        Content="按鈕 3"
+                        GroupName="MacroButton"
+                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=3, Converter={StaticResource IntToBoolConverter}}" />
+                    <RadioButton
+                        Margin="5,0"
+                        Content="按鈕 4"
+                        GroupName="MacroButton"
+                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=4, Converter={StaticResource IntToBoolConverter}}" />
+                </StackPanel>
+
+                <ListView
+                    Grid.Row="1"
+                    Grid.ColumnSpan="4"
+                    Margin="5"
+                    ItemsSource="{Binding CurrentMacroSteps}"
+                    SelectedItem="{Binding SelectedMacroStep}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding ActionType}"
+                                Header="動作類型" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding DisplayKey}"
+                                Header="按鍵" />
+                            <GridViewColumn
+                                Width="100"
+                                DisplayMemberBinding="{Binding DelayMilliseconds}"
+                                Header="延遲 (ms)" />
+                            <GridViewColumn Width="80" Header="操作">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button
+                                            Padding="10,0"
+                                            Background="Transparent"
+                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.RemoveMacroStepCommand}"
+                                            CommandParameter="{Binding}"
+                                            Content="移除" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <StackPanel
+                    Grid.Row="2"
+                    Grid.ColumnSpan="4"
+                    Margin="5"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="動作類型:" />
+                    <ComboBox
+                        Width="120"
+                        ItemsSource="{Binding AllMacroActionTypes}"
+                        SelectedItem="{Binding NewMacroActionType}" />
+                    <TextBlock
+                        Margin="10,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="按鍵:" />
+                    <ComboBox
+                        Width="120"
+                        ItemsSource="{Binding AllKeys}"
+                        SelectedItem="{Binding NewMacroKey}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="3"
+                    Grid.ColumnSpan="4"
+                    Margin="5"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,5,0"
+                        VerticalAlignment="Center"
+                        Text="延遲 (ms):" />
+                    <TextBox Width="100" Text="{Binding NewMacroDelayMilliseconds}" />
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Row="4"
+                    Grid.ColumnSpan="4"
+                    Margin="5"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <Button
+                        Margin="5,0"
+                        Padding="10,5"
+                        Background="Transparent"
+                        Command="{Binding AddMacroStepCommand}"
+                        Content="新增步驟" />
+                    <Button
+                        Margin="5,0"
+                        Padding="10,5"
+                        Background="Transparent"
+                        Command="{Binding SaveMacroCommand}"
+                        Content="儲存巨集" />
+                </StackPanel>
+
             </Grid>
         </TabItem>
     </TabControl>
