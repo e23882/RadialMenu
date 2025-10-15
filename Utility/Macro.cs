@@ -45,20 +45,7 @@ namespace RadialMenu.Utility
                 {
                     _key = value;
                     OnPropertyChanged(nameof(Key));
-                    OnPropertyChanged(nameof(DisplayKey));
                 }
-            }
-        }
-
-        private string _DisplayKey;
-        public string DisplayKey
-        {
-            get
-            {
-                return _key.ToString();
-            }
-            set
-            {
             }
         }
 

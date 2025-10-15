@@ -1,9 +1,7 @@
 using RadialMenu.Utility;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Windows.Input;
 
 namespace RadialMenu.ViewModel
@@ -174,6 +172,7 @@ namespace RadialMenu.ViewModel
             {
                 _newMacroActionType = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanAddMacroStep));
             }
         }
 
@@ -185,6 +184,7 @@ namespace RadialMenu.ViewModel
             {
                 _newMacroKey = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(CanAddMacroStep));
             }
         }
 
@@ -194,8 +194,27 @@ namespace RadialMenu.ViewModel
             get => _newMacroDelayMilliseconds;
             set
             {
-                _newMacroDelayMilliseconds = value;
-                OnPropertyChanged();
+                if (_newMacroDelayMilliseconds != value)
+                {
+                    _newMacroDelayMilliseconds = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(CanAddMacroStep));
+                }
+            }
+        }
+
+        public bool CanAddMacroStep
+        {
+            get
+            {
+                if (NewMacroActionType == MacroActionType.Delay)
+                {
+                    return NewMacroDelayMilliseconds >= 0; // Delay must be non-negative
+                }
+                else
+                {
+                    return NewMacroKey != Key.None; // For other actions, a key must be selected
+                }
             }
         }
 
@@ -230,8 +249,7 @@ namespace RadialMenu.ViewModel
             _appSettings.PanelColor = this.PanelColor;
             _appSettings.FontSize = this.FontSize;
 
-            string jsonString = JsonSerializer.Serialize(_appSettings);
-            File.WriteAllText("settings.json", jsonString);
+            SettingsManager.SaveSettings(_appSettings);
 
             if (obj is System.Windows.Window window)
             {
@@ -248,13 +266,34 @@ namespace RadialMenu.ViewModel
 
         private void AddMacroStepCommandAction(object? obj)
         {
+            if (!CanAddMacroStep)
+            {
+                return;
+            }
+
             var newStep = new MacroStep
             {
                 ActionType = NewMacroActionType,
-                Key = NewMacroKey,
+                Key = NewMacroActionType == MacroActionType.Delay ? Key.None : NewMacroKey, // Key is only relevant for non-delay actions
                 DelayMilliseconds = NewMacroActionType == MacroActionType.Delay ? NewMacroDelayMilliseconds : 0
             };
-            CurrentMacroSteps.Add(newStep);
+
+            if (SelectedMacroStep != null)
+            {
+                int index = CurrentMacroSteps.IndexOf(SelectedMacroStep);
+                if (index >= 0)
+                {
+                    CurrentMacroSteps.Insert(index + 1, newStep);
+                }
+                else
+                {
+                    CurrentMacroSteps.Add(newStep);
+                }
+            }
+            else
+            {
+                CurrentMacroSteps.Add(newStep);
+            }
         }
 
         private void RemoveMacroStepCommandAction(object? obj)
@@ -278,6 +317,12 @@ namespace RadialMenu.ViewModel
                 {
                     _appSettings.ButtonMacros.Add(SelectedButtonIndex, new Macro { Steps = CurrentMacroSteps.ToList() });
                 }
+            }
+            SettingsManager.SaveSettings(_appSettings);
+
+            if (obj is System.Windows.Window window)
+            {
+                window.Close();
             }
         }
 
@@ -305,16 +350,16 @@ namespace RadialMenu.ViewModel
         /// </summary>
         public SettingsWindowViewModel()
         {
-            _appSettings = new AppSettings(); // Initialize AppSettings
+            _appSettings = SettingsManager.LoadSettings(); // Initialize AppSettings using SettingsManager
             InitialCommand();
             InitialSelection();
-            Button1Text = "Button 1";
-            Button2Text = "Button 2";
-            Button3Text = "Button 3";
-            Button4Text = "Button 4";
-            PanelOpacity = 0.8;
-            PanelColor = "Gray";
-            FontSize = 12; // Default value
+            Button1Text = _appSettings.Button1Text;
+            Button2Text = _appSettings.Button2Text;
+            Button3Text = _appSettings.Button3Text;
+            Button4Text = _appSettings.Button4Text;
+            PanelOpacity = _appSettings.PanelOpacity;
+            PanelColor = _appSettings.PanelColor;
+            FontSize = _appSettings.FontSize;
             ColorOptions = new ObservableCollection<string> { "Gray", "Black", "White", "Red", "Green", "Blue" };
 
             AllMacroActionTypes = new ObservableCollection<MacroActionType>(Enum.GetValues(typeof(MacroActionType)).Cast<MacroActionType>());
@@ -330,23 +375,19 @@ namespace RadialMenu.ViewModel
 
         private void LoadSettings()
         {
-            if (File.Exists("settings.json"))
-            {
-                string jsonString = File.ReadAllText("settings.json");
-                _appSettings = JsonSerializer.Deserialize<AppSettings>(jsonString);
-                MouseMenuEnable = _appSettings.MouseMenuEnable;
-                SelectedKey = _appSettings.SelectedKey;
-                Button1Text = _appSettings.Button1Text;
-                Button2Text = _appSettings.Button2Text;
-                Button3Text = _appSettings.Button3Text;
-                Button4Text = _appSettings.Button4Text;
-                PanelOpacity = _appSettings.PanelOpacity;
-                PanelColor = _appSettings.PanelColor;
-                FontSize = _appSettings.FontSize;
+            _appSettings = SettingsManager.LoadSettings();
+            MouseMenuEnable = _appSettings.MouseMenuEnable;
+            SelectedKey = _appSettings.SelectedKey;
+            Button1Text = _appSettings.Button1Text;
+            Button2Text = _appSettings.Button2Text;
+            Button3Text = _appSettings.Button3Text;
+            Button4Text = _appSettings.Button4Text;
+            PanelOpacity = _appSettings.PanelOpacity;
+            PanelColor = _appSettings.PanelColor;
+            FontSize = _appSettings.FontSize;
 
-                // Load macros for the initially selected button
-                LoadMacroForSelectedButton();
-            }
+            // Load macros for the initially selected button
+            LoadMacroForSelectedButton();
         }
 
         private void InitialSelection()
@@ -364,7 +405,7 @@ namespace RadialMenu.ViewModel
             SaveSettingCommand = new RelayCommand(SaveSettingCommandAction);
             CancelCommand = new RelayCommand(CancelCommandAction);
             ChooseColorCommand = new RelayCommand(ChooseColorCommandAction);
-            AddMacroStepCommand = new RelayCommand(AddMacroStepCommandAction);
+            AddMacroStepCommand = new RelayCommand(AddMacroStepCommandAction, _ => CanAddMacroStep);
             RemoveMacroStepCommand = new RelayCommand(RemoveMacroStepCommandAction);
             SaveMacroCommand = new RelayCommand(SaveMacroCommandAction);
         }

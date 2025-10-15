@@ -6,11 +6,13 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:utility="clr-namespace:RadialMenu.Utility"
     Title="Settings"
-    Width="450"
+    Width="500"
     Height="400">
     <Window.Resources>
         <utility:StringToBrushConverter x:Key="StringToBrushConverter" />
         <utility:IntToBoolConverter x:Key="IntToBoolConverter" />
+        <utility:DelayValueConverter x:Key="DelayValueConverter" />
+        <utility:KeyDisplayConverter x:Key="KeyDisplayConverter" />
     </Window.Resources>
     <TabControl Margin="10">
         <TabItem Header="樣式">
@@ -201,26 +203,44 @@
                         Margin="0,0,10,0"
                         VerticalAlignment="Center"
                         Text="選擇按鈕:" />
-                    <RadioButton
-                        Margin="5,0"
-                        Content="按鈕 1"
-                        GroupName="MacroButton"
-                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=1, Converter={StaticResource IntToBoolConverter}}" />
-                    <RadioButton
-                        Margin="5,0"
-                        Content="按鈕 2"
-                        GroupName="MacroButton"
-                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=2, Converter={StaticResource IntToBoolConverter}}" />
-                    <RadioButton
-                        Margin="5,0"
-                        Content="按鈕 3"
-                        GroupName="MacroButton"
-                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=3, Converter={StaticResource IntToBoolConverter}}" />
-                    <RadioButton
-                        Margin="5,0"
-                        Content="按鈕 4"
-                        GroupName="MacroButton"
-                        IsChecked="{Binding SelectedButtonIndex, ConverterParameter=4, Converter={StaticResource IntToBoolConverter}}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <RadioButton
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="5"
+                            Content="按鈕 1"
+                            GroupName="MacroButton"
+                            IsChecked="{Binding SelectedButtonIndex, ConverterParameter=1, Converter={StaticResource IntToBoolConverter}}" />
+                        <RadioButton
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="5"
+                            Content="按鈕 2"
+                            GroupName="MacroButton"
+                            IsChecked="{Binding SelectedButtonIndex, ConverterParameter=2, Converter={StaticResource IntToBoolConverter}}" />
+                        <RadioButton
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="5"
+                            Content="按鈕 3"
+                            GroupName="MacroButton"
+                            IsChecked="{Binding SelectedButtonIndex, ConverterParameter=3, Converter={StaticResource IntToBoolConverter}}" />
+                        <RadioButton
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="5"
+                            Content="按鈕 4"
+                            GroupName="MacroButton"
+                            IsChecked="{Binding SelectedButtonIndex, ConverterParameter=4, Converter={StaticResource IntToBoolConverter}}" />
+                    </Grid>
                 </StackPanel>
 
                 <ListView
@@ -235,14 +255,20 @@
                                 Width="100"
                                 DisplayMemberBinding="{Binding ActionType}"
                                 Header="動作類型" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding DisplayKey}"
-                                Header="按鍵" />
-                            <GridViewColumn
-                                Width="100"
-                                DisplayMemberBinding="{Binding DelayMilliseconds}"
-                                Header="延遲 (ms)" />
+                            <GridViewColumn Width="100" Header="按鍵">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource KeyDisplayConverter}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Width="100" Header="延遲 (ms)">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={StaticResource DelayValueConverter}}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Width="80" Header="操作">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -279,7 +305,18 @@
                     <ComboBox
                         Width="120"
                         ItemsSource="{Binding AllKeys}"
-                        SelectedItem="{Binding NewMacroKey}" />
+                        SelectedItem="{Binding NewMacroKey}">
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="IsEnabled" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding NewMacroActionType}" Value="Delay">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+                    </ComboBox>
                 </StackPanel>
 
                 <StackPanel
@@ -291,7 +328,18 @@
                         Margin="0,0,5,0"
                         VerticalAlignment="Center"
                         Text="延遲 (ms):" />
-                    <TextBox Width="100" Text="{Binding NewMacroDelayMilliseconds}" />
+                    <TextBox Width="100" Text="{Binding NewMacroDelayMilliseconds}">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="IsEnabled" Value="False" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding NewMacroActionType}" Value="Delay">
+                                        <Setter Property="IsEnabled" Value="True" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                 </StackPanel>
 
                 <StackPanel
@@ -311,6 +359,7 @@
                         Padding="10,5"
                         Background="Transparent"
                         Command="{Binding SaveMacroCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                         Content="儲存巨集" />
                 </StackPanel>
 

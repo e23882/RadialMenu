@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.IO;
-using System.Text.Json;
 
 namespace RadialMenu
 {
@@ -210,6 +208,8 @@ namespace RadialMenu
 
         public RadialWindowViewModel()
         {
+            _appSettings = SettingsManager.LoadSettings(); // Initialize AppSettings using SettingsManager
+            SettingsManager.SettingsChanged += SettingsManager_SettingsChanged; // Subscribe to settings changed event
             InitialCommand();
             Button1Text = "Button 1";
             Button2Text = "Button 2";
@@ -223,32 +223,21 @@ namespace RadialMenu
             LoadSettings();
         }
 
+        private void SettingsManager_SettingsChanged(object? sender, EventArgs e)
+        {
+            LoadSettings(); // Reload settings when they change
+        }
+
         private void LoadSettings()
         {
-            if (File.Exists("settings.json"))
-            {
-                string jsonString = File.ReadAllText("settings.json");
-                _appSettings = JsonSerializer.Deserialize<AppSettings>(jsonString);
-                PanelOpacity = _appSettings.PanelOpacity;
-                PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(_appSettings.PanelColor);
-                FontSize = _appSettings.FontSize;
-                Button1Text = _appSettings.Button1Text;
-                Button2Text = _appSettings.Button2Text;
-                Button3Text = _appSettings.Button3Text;
-                Button4Text = _appSettings.Button4Text;
-            }
-            else
-            {
-                // Set default values if settings file doesn't exist
-                _appSettings = new AppSettings(); // Initialize with default values
-                PanelOpacity = 0.8;
-                PanelColor = System.Windows.Media.Brushes.Gray;
-                FontSize = 12;
-                Button1Text = "Button 1";
-                Button2Text = "Button 2";
-                Button3Text = "Button 3";
-                Button4Text = "Button 4";
-            }
+            _appSettings = SettingsManager.LoadSettings();
+            PanelOpacity = _appSettings.PanelOpacity;
+            PanelColor = (System.Windows.Media.Brush)new BrushConverter().ConvertFromString(_appSettings.PanelColor);
+            FontSize = _appSettings.FontSize;
+            Button1Text = _appSettings.Button1Text;
+            Button2Text = _appSettings.Button2Text;
+            Button3Text = _appSettings.Button3Text;
+            Button4Text = _appSettings.Button4Text;
         }
 
         private void InitialSelection()
@@ -259,3 +248,4 @@ namespace RadialMenu
         #endregion
     }
 }
+
