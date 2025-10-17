@@ -1,11 +1,12 @@
 using Autofac;
+using MahApps.Metro.Controls;
 using RadialMenu.ViewModel;
 using System.ComponentModel;
 using System.Windows;
 
 namespace RadialMenu
 {
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow : MetroWindow
     {
         #region Properties
         public SettingsWindowViewModel ViewModel { get; set; }

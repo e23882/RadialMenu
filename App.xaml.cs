@@ -38,7 +38,9 @@ namespace RadialMenu
                 .SingleInstance();
             builder.RegisterType<SettingsWindowViewModel>()
                 .SingleInstance();
-
+            builder.RegisterType<LoadingWindowViewModel>()
+                .SingleInstance();
+            
             Container = builder.Build();
         }
 

@@ -1,10 +1,6 @@
 
 using RadialMenu.Utility;
-using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
 using System.Windows.Threading;
 
 namespace RadialMenu.ViewModel
