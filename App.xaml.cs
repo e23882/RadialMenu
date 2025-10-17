@@ -1,9 +1,11 @@
 using Autofac;
+using RadialMenu.View;
 using RadialMenu.ViewModel;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -31,7 +33,7 @@ namespace RadialMenu
         public void InitialDIContainer()
         {
             var builder = new ContainerBuilder();
-            
+
             builder.RegisterType<RadialWindowViewModel>()
                 .SingleInstance();
             builder.RegisterType<SettingsWindowViewModel>()
@@ -40,11 +42,18 @@ namespace RadialMenu
             Container = builder.Build();
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            var loadingWindow = new LoadingWindow();
+            loadingWindow.Show();
+
+            await Task.Delay(1500);
+
+            loadingWindow.Close();
 
             _radialWindow = new RadialWindow();
 
