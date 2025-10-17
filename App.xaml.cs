@@ -96,7 +96,7 @@ namespace RadialMenu
                     Button1Text = "Button 1",
                     Button2Text = "Button 2",
                     Button3Text = "Button 3",
-                    Button4Text = "Button 4",
+                    Button4Text = "SETTING",
                     PanelOpacity = 0.8,
                     PanelColor = "#FF808080",
                     FontSize = 12,

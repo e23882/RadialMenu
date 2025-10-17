@@ -132,7 +132,7 @@
                     <TextBlock.RenderTransform>
                         <TransformGroup>
                             <RotateTransform Angle="{Binding Button4ContentRotationAngle}" />
-                            <TranslateTransform X="50" Y="40" />
+                            <TranslateTransform X="23" Y="32" />
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>

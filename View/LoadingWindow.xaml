@@ -8,8 +8,9 @@
     xmlns:viewModel="clr-namespace:RadialMenu.ViewModel"
     Title="LoadingWindow"
     AllowsTransparency="True"
-    Background="#80000000"
+    Background="#6EFFFF"
     FontFamily="pack://application:,,,/RadialMenu;component/Fonts/#LEDFont"
+    Opacity="0.5"
     WindowState="Maximized"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -20,8 +21,9 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <TextBlock
                 HorizontalAlignment="Center"
-                FontSize="36"
-                Foreground="White"
+                FontSize="42"
+                FontWeight="SemiBold"
+                Foreground="Black"
                 Text="Loading..." />
             <ItemsControl Margin="0,20,0,0" ItemsSource="{Binding Blocks}">
                 <ItemsControl.ItemsPanel>
@@ -53,7 +55,8 @@
                 Margin="0,10,0,0"
                 HorizontalAlignment="Center"
                 FontSize="36"
-                Foreground="White"
+                FontWeight="SemiBold"
+                Foreground="Black"
                 Text="{Binding ProgressText}" />
         </StackPanel>
     </Grid>

@@ -1,9 +1,4 @@
 using RadialMenu.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Diagnostics; // Added for Process.Start
@@ -166,7 +161,9 @@ namespace RadialMenu
         private void LeftButtonClickCommandAction(object? obj)
         {
             CurrentWindow.Hide();
-            ExecuteMacroForButton(4);
+            var _settingsWindow = new SettingsWindow();
+            _settingsWindow.Show();
+            _settingsWindow.Activate();
         }
 
         private void ExecuteMacroForButton(int buttonIndex)
