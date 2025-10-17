@@ -16,7 +16,7 @@
         <utility:KeyDisplayConverter x:Key="KeyDisplayConverter" />
     </Window.Resources>
     <TabControl Margin="10">
-        <TabItem Header="樣式">
+        <TabItem Header="選單樣式">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -435,6 +435,54 @@
                         Content="儲存巨集"
                         FontSize="16" />
                 </StackPanel>
+            </Grid>
+        </TabItem>
+        <TabItem Header="HUD">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="顯示CPU、記憶體使用率" />
+                <controls:ToggleSwitch
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    IsOn="{Binding ShowCPUUseage}" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="顯示" />
+                <controls:ToggleSwitch
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    IsOn="{Binding ShowRamUseage}" />
+
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    VerticalAlignment="Center"
+                    Text="顯示滑鼠資訊" />
+                <controls:ToggleSwitch
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalAlignment="Left"
+                    IsOn="{Binding ShowMouseInfo}" />
+
             </Grid>
         </TabItem>
     </TabControl>

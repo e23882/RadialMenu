@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Windows.Media;
 using RadialMenu.Utility;
 
 namespace RadialMenu
@@ -15,6 +13,9 @@ namespace RadialMenu
         public double PanelOpacity { get; set; }
         public string PanelColor { get; set; } = "Gray";
         public double FontSize { get; set; } = 12; // Default font size
+        public bool ShowCPUUseage { get; set; }
+        public double SystemUsageWindowTop { get; set; }
+        public double SystemUsageWindowLeft { get; set; }
         public Dictionary<int, Macro> ButtonMacros { get; set; } = new Dictionary<int, Macro>();
     }
 }

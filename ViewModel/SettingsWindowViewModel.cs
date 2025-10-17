@@ -14,6 +14,42 @@ namespace RadialMenu.ViewModel
         #endregion
 
         #region Properties
+        /// <summary>
+        /// 顯示滑鼠資訊
+        /// </summary>
+        private bool _ShowMouseInfo;
+        public bool ShowMouseInfo
+        {
+            get
+            {
+                return _ShowMouseInfo;
+            }
+            set
+            {
+                _ShowMouseInfo = value;
+                OnPropertyChanged();
+            }
+        }
+        /// <summary>
+        /// 顯示CPU、記憶體使用量
+        /// </summary>
+        private bool _ShowCPUUseage;
+        public bool ShowCPUUseage
+        {
+            get
+            {
+                return _ShowCPUUseage;
+            }
+            set
+            {
+                _ShowCPUUseage = value;
+                OnPropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// 選擇按鍵選向資料來源
+        /// </summary>
         public ObservableCollection<string> AllKeyCollection
         {
             get
@@ -26,6 +62,10 @@ namespace RadialMenu.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// 是否顯示滑鼠選單
+        /// </summary>
         private bool _mouseMenuEnable;
         public bool MouseMenuEnable
         {
@@ -37,6 +77,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 目前選取的按鍵
+        /// </summary>
         private string _selectedKey;
         public string SelectedKey
         {
@@ -48,6 +91,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 滑鼠選單按鈕文字
+        /// </summary>
         private string _button1Text;
         public string Button1Text
         {
@@ -59,6 +105,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 滑鼠選單按鈕文字
+        /// </summary>
         private string _button2Text;
         public string Button2Text
         {
@@ -70,6 +119,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 滑鼠選單按鈕文字
+        /// </summary>
         private string _button3Text;
         public string Button3Text
         {
@@ -81,6 +133,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 滑鼠選單按鈕文字
+        /// </summary>
         private string _button4Text;
         public string Button4Text
         {
@@ -92,6 +147,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 滑鼠選單透明度
+        /// </summary>
         private double _panelOpacity;
         public double PanelOpacity
         {
@@ -103,6 +161,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// Panel背景顏色
+        /// </summary>
         private string _panelColor;
         public string PanelColor
         {
@@ -123,6 +184,9 @@ namespace RadialMenu.ViewModel
             }
         }
 
+        /// <summary>
+        /// 字體大小
+        /// </summary>
         private double _fontSize;
         public double FontSize
         {
@@ -133,6 +197,10 @@ namespace RadialMenu.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// 選取顏色Combobox選項資料來源
+        /// </summary>
         public ObservableCollection<string> ColorOptions { get; set; }
         public ICommand ChooseColorCommand { get; set; }
 
@@ -294,6 +362,7 @@ namespace RadialMenu.ViewModel
             _appSettings.PanelOpacity = this.PanelOpacity;
             _appSettings.PanelColor = this.PanelColor;
             _appSettings.FontSize = this.FontSize;
+            _appSettings.ShowCPUUseage = this.ShowCPUUseage;
 
             SettingsManager.SaveSettings(_appSettings);
 
@@ -434,6 +503,7 @@ namespace RadialMenu.ViewModel
             PanelColor = _appSettings.PanelColor;
             FontSize = _appSettings.FontSize;
 
+            ShowCPUUseage = _appSettings.ShowCPUUseage;
             // Load macros for the initially selected button
             LoadMacroForSelectedButton();
         }

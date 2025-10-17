@@ -17,6 +17,8 @@ namespace RadialMenu
         #region Fields
         private NotifyIcon _notifyIcon;
         private RadialWindow _radialWindow;
+        private SystemUsageWindow _systemUsageWindow;
+        private SettingsWindowViewModel _settingsViewModel;
         #endregion
 
         #region Properties
@@ -58,6 +60,14 @@ namespace RadialMenu
             loadingWindow.Close();
 
             _radialWindow = new RadialWindow();
+
+            _settingsViewModel = Container.Resolve<SettingsWindowViewModel>();
+            _settingsViewModel.PropertyChanged += SettingsViewModel_PropertyChanged;
+
+            _systemUsageWindow = new SystemUsageWindow();
+            _systemUsageWindow.PositionChanged += SystemUsageWindow_PositionChanged;
+
+            UpdateSystemUsageWindowVisibility();
 
             _notifyIcon = new NotifyIcon();
             _notifyIcon.Icon = SystemIcons.Application;
@@ -176,8 +186,40 @@ namespace RadialMenu
         {
             LowLevelMouseHook.Stop();
             _notifyIcon.Dispose();
-
+            _systemUsageWindow?.Close();
             base.OnExit(e);
+        }
+
+        private void SettingsViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SettingsWindowViewModel.ShowCPUUseage))
+            {
+                UpdateSystemUsageWindowVisibility();
+            }
+        }
+
+        private void UpdateSystemUsageWindowVisibility()
+        {
+            var settings = Utility.SettingsManager.LoadSettings();
+            _systemUsageWindow.Left = settings.SystemUsageWindowLeft;
+            _systemUsageWindow.Top = settings.SystemUsageWindowTop;
+
+            if (_settingsViewModel.ShowCPUUseage)
+            {
+                _systemUsageWindow.Show();
+            }
+            else
+            {
+                _systemUsageWindow.Hide();
+            }
+        }
+
+        private void SystemUsageWindow_PositionChanged(object sender, System.Windows.Point e)
+        {
+            var settings = Utility.SettingsManager.LoadSettings();
+            settings.SystemUsageWindowLeft = e.X;
+            settings.SystemUsageWindowTop = e.Y;
+            Utility.SettingsManager.SaveSettings(settings);
         }
         #endregion
     }
