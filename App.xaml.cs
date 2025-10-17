@@ -111,7 +111,7 @@ namespace RadialMenu
                     Button4Text = "SETTING",
                     PanelOpacity = 0.8,
                     PanelColor = "#FF808080",
-                    FontSize = 12,
+                    FontSize = 16,
                     ButtonMacros = new System.Collections.Generic.Dictionary<int, Utility.Macro>()
                 };
                 Utility.SettingsManager.SaveSettings(settings);

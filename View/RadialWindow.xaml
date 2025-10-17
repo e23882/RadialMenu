@@ -65,7 +65,7 @@
                     <TextBlock.RenderTransform>
                         <TransformGroup>
                             <RotateTransform Angle="{Binding Button1ContentRotationAngle}" />
-                            <TranslateTransform X="15" Y="-8" />
+                            <TranslateTransform X="20" Y="-13" />
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>
@@ -109,7 +109,7 @@
                     <TextBlock.RenderTransform>
                         <TransformGroup>
                             <RotateTransform Angle="{Binding Button3ContentRotationAngle}" />
-                            <TranslateTransform X="-4" Y="50" />
+                            <TranslateTransform X="10" Y="50" />
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>
@@ -124,7 +124,6 @@
             x:Name="Button4"
             Background="{Binding PanelColor}"
             Command="{Binding LeftButtonClickCommand}"
-            FontSize="20"
             RenderTransformOrigin="0.5,0.5"
             Style="{StaticResource PieSliceButton}">
             <Button.Content>
@@ -132,7 +131,7 @@
                     <TextBlock.RenderTransform>
                         <TransformGroup>
                             <RotateTransform Angle="{Binding Button4ContentRotationAngle}" />
-                            <TranslateTransform X="23" Y="32" />
+                            <TranslateTransform X="55" Y="32" />
                         </TransformGroup>
                     </TextBlock.RenderTransform>
                 </TextBlock>

@@ -1,4 +1,3 @@
-
 using RadialMenu.Utility;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
